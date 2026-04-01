@@ -53,7 +53,7 @@ CLAUDE.md
 
 这个工具包采用星型拓扑。主会话负责总控，所有 subagent 都只向主会话汇报，不直接互聊。
 
-核心项目 agents：
+核心与支持型项目 agents：
 
 - `gamekit-main-orchestrator`
 - `gamekit-feature-analyst`
@@ -62,6 +62,9 @@ CLAUDE.md
 - `gamekit-gameplay-engineer`
 - `gamekit-qa-verifier`
 - `gamekit-research-scout`
+- `gamekit-script-validator`
+- `gamekit-release-manager`
+- `gamekit-bilingual-docs`
 - `gamekit-unity-integrator`
 - `gamekit-godot-integrator`
 - `gamekit-web-integrator`
@@ -207,4 +210,3 @@ node .claude-gamekit/core/scripts/verify/run.mjs --task active
 - `.claude-gamekit/core/schemas/`
 - `.claude-gamekit/project/docs/`
 - `.claude-gamekit/project/artifacts/`
-

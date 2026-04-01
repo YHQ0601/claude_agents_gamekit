@@ -53,7 +53,7 @@ CLAUDE.md
 
 The toolkit uses a star topology. The main session acts as `gamekit-main-orchestrator`, and all subagents report back to it.
 
-Core project agents:
+Core and support project agents:
 
 - `gamekit-main-orchestrator`
 - `gamekit-feature-analyst`
@@ -62,6 +62,9 @@ Core project agents:
 - `gamekit-gameplay-engineer`
 - `gamekit-qa-verifier`
 - `gamekit-research-scout`
+- `gamekit-script-validator`
+- `gamekit-release-manager`
+- `gamekit-bilingual-docs`
 - `gamekit-unity-integrator`
 - `gamekit-godot-integrator`
 - `gamekit-web-integrator`
@@ -207,4 +210,3 @@ That split is what keeps the template portable across engines and projects. Unit
 - `.claude-gamekit/core/schemas/`
 - `.claude-gamekit/project/docs/`
 - `.claude-gamekit/project/artifacts/`
-
