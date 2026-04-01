@@ -17,6 +17,28 @@ This repository is built for a practical problem: most AI coding workflows break
 
 If you want Claude Code to help with real game production work instead of isolated code snippets, this template is the starting point.
 
+## Table Of Contents
+
+- [Why This Exists](#why-this-exists)
+- [Core Design Ideas](#core-design-ideas)
+- [What Makes This Repository Different](#what-makes-this-repository-different)
+- [Supported Targets](#supported-targets)
+- [Repository Structure](#repository-structure)
+- [Included Agents](#included-agents)
+- [Included Commands](#included-commands)
+- [Workflow Overview](#workflow-overview)
+- [Why Parallel Subagents Matter Here](#why-parallel-subagents-matter-here)
+- [Validation And Script Coverage](#validation-and-script-coverage)
+- [Quick Start](#quick-start)
+- [Keep The Template Clean](#keep-the-template-clean)
+- [Recommended For](#recommended-for)
+- [FAQ](#faq)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [Documentation](#documentation)
+- [Suggested GitHub About](#suggested-github-about)
+- [Project Character](#project-character)
+
 ## Why This Exists
 
 Game development is a poor fit for naive agent workflows.
@@ -378,6 +400,89 @@ This repository is a good fit if you are:
 - trying to keep placeholder assets replaceable
 - using Unity first but planning for engine portability
 - interested in multi-agent workflows that are more disciplined than "one chat does everything"
+
+## FAQ
+
+### Is this only for Unity?
+
+No. Unity is the first full adapter, because it is the most common pressure case for 3D workflows and the one most likely to suffer from "AI made it work once, but no one can safely replace the assets later." The workflow itself is engine-agnostic. Godot, web, and WeChat Mini Game support reuse the same task model, handoff model, Asset ABI idea, and verification shape.
+
+### Why not let subagents talk to each other directly?
+
+Because direct subagent chatter usually makes the system feel more sophisticated than it is. In practice it increases context drift, hides responsibility, and makes recovery harder after interruptions. This template chooses controllable coordination over theatrical autonomy.
+
+### Why not put everything in one big CLAUDE.md?
+
+Because large always-loaded instruction files become noisy fast. This template keeps the root `CLAUDE.md` thin and pushes project state into `project/artifacts/` plus audience-specific docs under `project/docs/`. That keeps the active context smaller and easier to trust.
+
+### Why separate placeholder art from Asset ABI?
+
+Because they solve different problems. Placeholder art is about speed. Asset ABI is about future replacement safety. If the same role owns both without discipline, gameplay code ends up depending on temporary asset names and hierarchy details.
+
+### Can I use this with a weak or cheap model?
+
+That is one of the reasons the template exists. The workflow is designed so lower-context models can still contribute by operating inside narrow roles with small inputs and explicit output formats.
+
+### Does this replace normal engineering discipline?
+
+No. It makes discipline easier to preserve. You still need review, sensible scope, engine knowledge, and production judgment. The template helps structure those things; it does not replace them.
+
+## Roadmap
+
+### Near Term
+
+- Add richer root-level onboarding docs and examples for first-time adopters.
+- Expand engine adapter guidance, especially for Godot and Web.
+- Improve release and documentation workflows around GitHub publishing.
+- Add more contract fixtures for common game slice patterns.
+
+### Mid Term
+
+- Add optional examples for common 3D slices without polluting the clean template state.
+- Add stronger CI recipes for Unity, Godot, and browser verification.
+- Add deeper capability scaffolds for Web and WeChat Mini Game verification.
+- Add contribution-friendly issue templates and release notes structure.
+
+### Longer Term
+
+- Provide optional packaged starters for common game genres or controller patterns.
+- Add broader asset pipeline contract examples for characters, props, cameras, and UI.
+- Add more robust evaluation suites for agent quality, not just script execution.
+
+## Contributing
+
+Contributions are welcome, but they should preserve the core identity of the template.
+
+What this project wants from contributors:
+
+- keep the template portable
+- keep the project state clean
+- keep the workflow explicit
+- avoid adding magic that hides state or responsibility
+
+Before opening a change:
+
+1. Run:
+
+   ```powershell
+   npm --prefix .claude-gamekit/core run validate
+   npm --prefix .claude-gamekit/core run test
+   ```
+
+2. Make sure the template still works as a clean skeleton.
+3. Avoid preloading demo tasks or project-specific state into `.claude-gamekit/project/`.
+4. If you add a new agent, command, schema, or script entrypoint, also add or update:
+
+   - validation coverage
+   - test fixtures
+   - smoke tests when the entrypoint is executable
+   - documentation
+
+5. Prefer changes that improve clarity, portability, and recoverability over changes that just add more agent behavior.
+
+There is also a dedicated contributor guide here:
+
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## Documentation
 
