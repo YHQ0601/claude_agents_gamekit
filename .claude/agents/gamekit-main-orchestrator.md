@@ -21,6 +21,7 @@ You are `gamekit-main-orchestrator`, the default main-thread agent for this repo
 - Use `gamekit-feature-analyst` for feature slicing.
 - Use `gamekit-placeholder-artist` and `gamekit-tech-art-contracts` for asset pass work.
 - Use `gamekit-gameplay-engineer` plus the relevant `gamekit-*integrator` for implementation.
+- Use `gamekit-cocos-integrator` when the active engine is `cocos` for Cocos Creator 3.x 2D or 3D work.
 - Use `gamekit-qa-verifier` before implementation for test cases and after implementation for verification.
 - Use `gamekit-script-validator` when command, hook, or script execution needs to be verified or repaired.
 - Use `gamekit-bilingual-docs` for Git-facing English and Chinese documentation.

@@ -1,7 +1,8 @@
-import { spawnSync } from "node:child_process";
+import { Worker } from "node:worker_threads";
 import { cp, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 import { PROJECT_ROOT } from "../scripts/lib/common.mjs";
 
@@ -23,6 +24,11 @@ export async function createIsolatedWorkspace() {
   await mkdir(path.join(workspaceRoot, "src"), { recursive: true });
   await writeFile(path.join(workspaceRoot, "src", "index.ts"), "export {};\n");
 
+  await mkdir(path.join(workspaceRoot, "assets"), { recursive: true });
+  await writeFile(path.join(workspaceRoot, "assets", ".gitkeep"), "");
+  await mkdir(path.join(workspaceRoot, "settings"), { recursive: true });
+  await writeFile(path.join(workspaceRoot, "settings", "project.json"), "{}\n");
+
   await writeFile(path.join(workspaceRoot, "package.json"), "{}\n");
   await writeFile(path.join(workspaceRoot, "project.godot"), "[gd_project]\n");
   await writeFile(path.join(workspaceRoot, "game.json"), "{}\n");
@@ -34,31 +40,43 @@ export async function destroyIsolatedWorkspace(workspaceRoot) {
   await rm(workspaceRoot, { recursive: true, force: true });
 }
 
-export function runToolkitScript(scriptRelativePath, { workspaceRoot, args = [], stdin = "" } = {}) {
-  const result = spawnSync(
-    process.execPath,
-    [path.join(PROJECT_ROOT, ".claude-gamekit", "core", "scripts", scriptRelativePath), ...args],
-    {
-      cwd: PROJECT_ROOT,
-      env: {
-        ...process.env,
-        CLAUDE_PROJECT_DIR: workspaceRoot,
-        FORCE_COLOR: "0"
-      },
-      input: stdin,
-      encoding: "utf8"
-    }
-  );
+export async function runToolkitScript(scriptRelativePath, { workspaceRoot, args = [], stdin = "" } = {}) {
+  const scriptPath = path.join(PROJECT_ROOT, ".claude-gamekit", "core", "scripts", scriptRelativePath);
+  const workerPath = path.join(PROJECT_ROOT, ".claude-gamekit", "core", "tests", "script-runner-worker.mjs");
 
-  if (result.error) {
-    throw result.error;
-  }
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(pathToFileURL(workerPath), {
+      type: "module",
+      workerData: {
+        scriptPath,
+        workspaceRoot,
+        args,
+        stdin
+      }
+    });
 
-  return {
-    status: result.status ?? 1,
-    stdout: result.stdout ?? "",
-    stderr: result.stderr ?? ""
-  };
+    let settled = false;
+
+    worker.once("message", (message) => {
+      settled = true;
+      resolve(message);
+      worker.terminate().catch(() => {});
+    });
+
+    worker.once("error", (error) => {
+      if (!settled) {
+        settled = true;
+        reject(error);
+      }
+    });
+
+    worker.once("exit", (code) => {
+      if (!settled && code !== 0) {
+        settled = true;
+        reject(new Error(`Worker exited with code ${code}`));
+      }
+    });
+  });
 }
 
 export function parseJsonOutput(output, label) {

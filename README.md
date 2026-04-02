@@ -2,10 +2,10 @@
 
 ![GitHub stars](https://img.shields.io/github/stars/YHQ0601/claude_agents_gamekit?style=flat-square)
 ![GitHub last commit](https://img.shields.io/github/last-commit/YHQ0601/claude_agents_gamekit?style=flat-square)
-![Platforms](https://img.shields.io/badge/platforms-Unity%20%7C%20Godot%20%7C%20Web%20%7C%20WeChat-blue?style=flat-square)
+![Platforms](https://img.shields.io/badge/platforms-Unity%20%7C%20Godot%20%7C%20Web%20%7C%20WeChat%20%7C%20Cocos-blue?style=flat-square)
 ![Workflow](https://img.shields.io/badge/workflow-Claude%20Code%20Multi--Agent-6f42c1?style=flat-square)
 
-A production-minded Claude Code multi-agent template for 3D game development across Unity, Godot, Web, and WeChat Mini Games.
+A production-minded Claude Code multi-agent template for 3D game development across Unity, Godot, Web, WeChat Mini Games, and Cocos Creator.
 
 It is built for a specific problem: game work is noisy, engine-heavy, asset-heavy, and easy to derail with long-context chats. GameKit keeps the workflow structured by combining:
 
@@ -98,6 +98,7 @@ The implementation layer for host-project code and engine-specific constraints.
 - [gamekit-godot-integrator](./.claude/agents/gamekit-godot-integrator.md)
 - [gamekit-web-integrator](./.claude/agents/gamekit-web-integrator.md)
 - [gamekit-wechat-integrator](./.claude/agents/gamekit-wechat-integrator.md)
+- [gamekit-cocos-integrator](./.claude/agents/gamekit-cocos-integrator.md)
 - [engine-capabilities.md](./.claude-gamekit/project/docs/engineering/engine-capabilities.md)
 
 ### [05. QA And Validation](#05-qa-and-validation)
@@ -153,7 +154,7 @@ Placeholder assets are useful only if they can be replaced safely later. GameKit
 
 The repository keeps engine differences isolated instead of pretending they do not exist.
 
-Unity is the first full adapter. Godot, Web, and WeChat Mini Game reuse the same workflow contracts with different engine-specific integration rules.
+Unity is the first full adapter. Cocos Creator 3.x now joins as a single engine adapter that covers both 2D and 3D projects, while Godot, Web, and WeChat Mini Game continue to reuse the same workflow contracts with engine-specific integration rules.
 
 ## 05. QA And Validation
 
@@ -256,6 +257,7 @@ Topics:
 - `godot`
 - `webgl`
 - `wechat-minigame`
+- `cocos-creator`
 - `agentic-workflow`
 - `asset-pipeline`
 - `qa-automation`

@@ -33,6 +33,8 @@ function engineIntegrator(engine) {
       return "gamekit-web-integrator";
     case "wechat-minigame":
       return "gamekit-wechat-integrator";
+    case "cocos":
+      return "gamekit-cocos-integrator";
     default:
       return "gamekit-unity-integrator";
   }

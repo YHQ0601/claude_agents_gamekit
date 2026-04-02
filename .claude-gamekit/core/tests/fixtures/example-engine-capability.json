@@ -12,5 +12,11 @@
   "manual_checks": [
     "scene_playtest",
     "avatar_swap_smoke"
+  ],
+  "content_modes": [
+    "3d"
+  ],
+  "publish_targets": [
+    "web-desktop"
   ]
 }

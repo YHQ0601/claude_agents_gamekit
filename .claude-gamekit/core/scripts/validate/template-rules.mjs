@@ -32,7 +32,8 @@ export const CUSTOM_AGENTS = [
   "gamekit-unity-integrator",
   "gamekit-godot-integrator",
   "gamekit-web-integrator",
-  "gamekit-wechat-integrator"
+  "gamekit-wechat-integrator",
+  "gamekit-cocos-integrator"
 ];
 
 export const COMMAND_NAMES = [
@@ -64,6 +65,11 @@ const REQUIRED_PATHS = [
   ".claude-gamekit/core/tests/fixtures/example-verify-result.json",
   ".claude-gamekit/core/tests/fixtures/example-engine-capability.json",
   ".claude-gamekit/core/scripts/tasks/handoff.mjs",
+  ".claude/agents/gamekit-cocos-integrator.md",
+  ".claude-gamekit/core/engines/cocos/CLAUDE.md",
+  ".claude-gamekit/core/engines/cocos/README.md",
+  ".claude-gamekit/core/scripts/verify/cocos.mjs",
+  ".claude-gamekit/project/artifacts/capabilities/cocos.json",
   ".claude-gamekit/core/templates/docs/.gitkeep",
   ".claude-gamekit/core/templates/artifacts/.gitkeep",
   ".claude-gamekit/core/templates/evals/.gitkeep"

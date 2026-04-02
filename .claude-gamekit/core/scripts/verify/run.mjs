@@ -15,6 +15,7 @@ import { planUnityVerification } from "./unity.mjs";
 import { planGodotVerification } from "./godot.mjs";
 import { planWebVerification } from "./web.mjs";
 import { planWechatVerification } from "./wechat-minigame.mjs";
+import { planCocosVerification } from "./cocos.mjs";
 
 function getArg(name, fallback) {
   const index = process.argv.indexOf(name);
@@ -43,6 +44,8 @@ function plannerFor(engine) {
       return planWebVerification;
     case "wechat-minigame":
       return planWechatVerification;
+    case "cocos":
+      return planCocosVerification;
     default:
       throw new Error(`Unsupported engine: ${engine}`);
   }
@@ -58,6 +61,8 @@ async function detectWorkspace(engine) {
       return (await markerExists("package.json")) && (await markerExists("src"));
     case "wechat-minigame":
       return (await markerExists("game.json")) || (await markerExists("project.config.json"));
+    case "cocos":
+      return (await markerExists("assets")) && (await markerExists("settings")) && (await markerExists("package.json"));
     default:
       return false;
   }

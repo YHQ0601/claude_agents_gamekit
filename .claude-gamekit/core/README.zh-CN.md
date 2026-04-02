@@ -1,5 +1,7 @@
 # .claude-gamekit Core
 
+> ?? Cocos Creator 3.x ??????? `cocos` ??????? 2D?3D ? mixed ???
+
 `.claude-gamekit` 是给 Claude Code 游戏项目用的可插拔工具包。它的设计目标是和现有的 Unity、Godot、Web、微信小游戏仓库并排存在，而不是接管宿主项目自己的 `scripts/`、`docs/` 或 `tests/` 目录。
 
 ## 这个工具包解决什么问题
@@ -69,6 +71,7 @@ CLAUDE.md
 - `gamekit-godot-integrator`
 - `gamekit-web-integrator`
 - `gamekit-wechat-integrator`
+- `gamekit-cocos-integrator`
 
 另外两个内置能力也会被优先使用：
 

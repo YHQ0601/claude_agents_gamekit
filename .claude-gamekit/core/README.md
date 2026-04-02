@@ -1,6 +1,6 @@
 # .claude-gamekit Core
 
-`.claude-gamekit` is a plug-in toolkit for Claude Code game projects. It is designed to sit next to an existing Unity, Godot, web, or WeChat Mini Game repository without taking over the host project's own `scripts/`, `docs/`, or `tests/` folders.
+`.claude-gamekit` is a plug-in toolkit for Claude Code game projects. It is designed to sit next to an existing Unity, Godot, web, WeChat Mini Game, or Cocos Creator repository without taking over the host project's own `scripts/`, `docs/`, or `tests/` folders.
 
 ## What This Toolkit Is For
 
@@ -69,6 +69,7 @@ Core and support project agents:
 - `gamekit-godot-integrator`
 - `gamekit-web-integrator`
 - `gamekit-wechat-integrator`
+- `gamekit-cocos-integrator`
 
 Built-in Claude Code agents still matter:
 
@@ -198,7 +199,7 @@ The toolkit keeps a strict split between:
 - structured state under `project/artifacts/`
 - reusable logic under `core/`
 
-That split is what keeps the template portable across engines and projects. Unity gets a first-class adapter, but Godot, web, and WeChat Mini Game reuse the same workflow contracts.
+That split is what keeps the template portable across engines and projects. Unity and Cocos Creator get explicit engine adapters, while Godot, web, and WeChat Mini Game reuse the same workflow contracts.
 
 ## Related Files
 

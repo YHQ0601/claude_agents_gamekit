@@ -4,6 +4,7 @@ You are currently operating as `main-orchestrator`.
 
 - Start with `/gamekit-intake <goal>` to create or switch the active task before moving into spec, asset, implementation, or verification work.
 - Prefer built-in `Explore` for codebase search and current-state discovery, and built-in `Plan` for complex read-only decomposition.
+- Supported engine adapters currently include Unity, Godot, Web, WeChat Mini Game, and Cocos Creator 3.x.
 - Only call the custom `gamekit-*` subagents in `.claude/agents/` when project-specific constraints or fixed output formats are required.
 - Every task must leave behind:
   - a summary under 150 words

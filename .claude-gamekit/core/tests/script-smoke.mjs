@@ -5,7 +5,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { readJson } from "../scripts/lib/common.mjs";
 import { createIsolatedWorkspace, destroyIsolatedWorkspace, parseJsonOutput, runToolkitScript } from "./smoke-utils.mjs";
 
-const ENGINES = ["unity", "godot", "web", "wechat-minigame"];
+const ENGINES = ["unity", "godot", "web", "wechat-minigame", "cocos"];
 
 function workspacePath(workspaceRoot, ...segments) {
   return path.join(workspaceRoot, ...segments);
@@ -15,18 +15,18 @@ export async function runScriptSmoke() {
   const workspaceRoot = await createIsolatedWorkspace();
 
   try {
-    const templateValidation = runToolkitScript("validate/validate-template.mjs", { workspaceRoot });
+    const templateValidation = await runToolkitScript("validate/validate-template.mjs", { workspaceRoot });
     assert.equal(templateValidation.status, 0, templateValidation.stderr);
     assert.match(templateValidation.stdout, /Template validation passed\./);
 
-    const promptBlocked = runToolkitScript("gates/prompt-guard.mjs", {
+    const promptBlocked = await runToolkitScript("gates/prompt-guard.mjs", {
       workspaceRoot,
       stdin: JSON.stringify({ prompt: "please implement this gameplay feature" })
     });
     assert.equal(promptBlocked.status, 0, promptBlocked.stderr);
     assert.equal(parseJsonOutput(promptBlocked.stdout, "prompt-guard block").decision, "block");
 
-    const intake = runToolkitScript("tasks/intake.mjs", {
+    const intake = await runToolkitScript("tasks/intake.mjs", {
       workspaceRoot,
       args: ["Example clean template smoke"]
     });
@@ -39,7 +39,7 @@ export async function runScriptSmoke() {
     );
     assert.equal(activePointerAfterIntake.active_task_id, intakeResult.task_id);
 
-    const promptContext = runToolkitScript("gates/prompt-guard.mjs", {
+    const promptContext = await runToolkitScript("gates/prompt-guard.mjs", {
       workspaceRoot,
       stdin: JSON.stringify({ prompt: "describe the current active task" })
     });
@@ -48,14 +48,14 @@ export async function runScriptSmoke() {
     assert.match(promptContextJson.hookSpecificOutput.additionalContext, /Active task:/);
     assert.match(promptContextJson.hookSpecificOutput.additionalContext, /task-example-clean-template-smoke/);
 
-    const taskPreflight = runToolkitScript("gates/task-preflight.mjs", {
+    const taskPreflight = await runToolkitScript("gates/task-preflight.mjs", {
       workspaceRoot,
       stdin: JSON.stringify({ tool_input: { command: "/gamekit-dispatch active" } })
     });
     assert.equal(taskPreflight.status, 0, taskPreflight.stderr);
     assert.match(parseJsonOutput(taskPreflight.stdout, "task-preflight").systemMessage, /Active task is task-example-clean-template-smoke/);
 
-    const dispatch = runToolkitScript("tasks/dispatch.mjs", {
+    const dispatch = await runToolkitScript("tasks/dispatch.mjs", {
       workspaceRoot,
       args: ["active"]
     });
@@ -70,7 +70,7 @@ export async function runScriptSmoke() {
     );
     assert.equal(workItems.agent, "gamekit-qa-verifier");
 
-    const toolGuardBlocked = runToolkitScript("gates/tool-guard.mjs", {
+    const toolGuardBlocked = await runToolkitScript("gates/tool-guard.mjs", {
       workspaceRoot,
       stdin: JSON.stringify({
         tool_name: "Bash",
@@ -83,7 +83,7 @@ export async function runScriptSmoke() {
       "deny"
     );
 
-    const toolGuardAllowed = runToolkitScript("gates/tool-guard.mjs", {
+    const toolGuardAllowed = await runToolkitScript("gates/tool-guard.mjs", {
       workspaceRoot,
       stdin: JSON.stringify({
         tool_name: "Write",
@@ -102,7 +102,7 @@ export async function runScriptSmoke() {
     });
     assert.equal(toolGuardAllowed.status, 0, toolGuardAllowed.stderr);
 
-    const subagentStop = runToolkitScript("gates/subagent-stop.mjs", {
+    const subagentStop = await runToolkitScript("gates/subagent-stop.mjs", {
       workspaceRoot,
       stdin: JSON.stringify({
         tool_input: {
@@ -113,14 +113,14 @@ export async function runScriptSmoke() {
     assert.equal(subagentStop.status, 0, subagentStop.stderr);
     assert.equal(subagentStop.stderr.trim(), "");
 
-    const stopGuardBlocked = runToolkitScript("gates/stop-guard.mjs", {
+    const stopGuardBlocked = await runToolkitScript("gates/stop-guard.mjs", {
       workspaceRoot,
       stdin: JSON.stringify({})
     });
     assert.equal(stopGuardBlocked.status, 0, stopGuardBlocked.stderr);
     assert.equal(parseJsonOutput(stopGuardBlocked.stdout, "stop-guard block").decision, "block");
 
-    const handoff = runToolkitScript("tasks/handoff.mjs", {
+    const handoff = await runToolkitScript("tasks/handoff.mjs", {
       workspaceRoot,
       args: [
         "gamekit-feature-analyst",
@@ -135,7 +135,7 @@ export async function runScriptSmoke() {
     const handoffResult = parseJsonOutput(handoff.stdout, "handoff");
     assert.match(handoffResult.handoff, /task-example-clean-template-smoke-smoke-handoff\.json$/);
 
-    const setStage = runToolkitScript("tasks/set-stage.mjs", {
+    const setStage = await runToolkitScript("tasks/set-stage.mjs", {
       workspaceRoot,
       args: ["active", "verification", "gamekit-qa-verifier", "active"]
     });
@@ -157,7 +157,7 @@ export async function runScriptSmoke() {
     await writeFile(reportPath, "# QA Report\n\nSmoke verification for the clean template.\n");
 
     for (const engine of ENGINES) {
-      const verify = runToolkitScript("verify/run.mjs", {
+      const verify = await runToolkitScript("verify/run.mjs", {
         workspaceRoot,
         args: ["--task", "active", "--engine", engine]
       });
@@ -179,7 +179,7 @@ export async function runScriptSmoke() {
       assert.equal(artifact.engine, engine);
     }
 
-    const postWriteAudit = runToolkitScript("gates/post-write-audit.mjs", {
+    const postWriteAudit = await runToolkitScript("gates/post-write-audit.mjs", {
       workspaceRoot,
       stdin: JSON.stringify({
         tool_input: {
@@ -191,14 +191,14 @@ export async function runScriptSmoke() {
     const auditJson = parseJsonOutput(postWriteAudit.stdout, "post-write-audit");
     assert.match(auditJson.hookSpecificOutput.additionalContext, /human-facing doc was updated/);
 
-    const stopGuardAllowed = runToolkitScript("gates/stop-guard.mjs", {
+    const stopGuardAllowed = await runToolkitScript("gates/stop-guard.mjs", {
       workspaceRoot,
       stdin: JSON.stringify({})
     });
     assert.equal(stopGuardAllowed.status, 0, stopGuardAllowed.stderr);
     assert.equal(stopGuardAllowed.stdout.trim(), "");
 
-    const close = runToolkitScript("tasks/close.mjs", {
+    const close = await runToolkitScript("tasks/close.mjs", {
       workspaceRoot,
       args: ["active"]
     });
